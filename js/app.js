@@ -2,6 +2,23 @@
  * Create a list that holds all of your cards
  */
 
+let gameCards = ["diamond","paper-plane-o","anchor","bolt","cube","leaf","bicycle","bomb",
+                    "diamond","paper-plane-o","anchor","bolt","cube","leaf","bicycle","bomb"];
+shuffle(gameCards);
+
+const fragment = document.createDocumentFragment();
+for (let index = 0; index <= 15; index++) {
+    let myLi = document.createElement('li');
+    let myIcon = document.createElement('i');
+    myLi.classList.add("card");
+    myIcon.classList.add("fa");
+    myIcon.classList.add("fa-"+gameCards[index]);
+    myLi.appendChild(myIcon);
+    fragment.appendChild(myLi);
+}
+document.getElementsByClassName('deck')[0].appendChild(fragment);
+
+
 
 /*
  * Display the cards on the page
