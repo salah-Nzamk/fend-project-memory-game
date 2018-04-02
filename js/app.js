@@ -11,14 +11,15 @@ for (let index = 0; index <= 15; index++) {
     let myLi = document.createElement('li');
     let myIcon = document.createElement('i');
     myLi.classList.add("card");
+    myLi.setAttribute("id",index);
+    myLi.setAttribute("value",0);
     myIcon.classList.add("fa");
     myIcon.classList.add("fa-"+gameCards[index]);
     myLi.appendChild(myIcon);
     fragment.appendChild(myLi);
 }
+
 document.getElementsByClassName('deck')[0].appendChild(fragment);
-
-
 
 /*
  * Display the cards on the page
@@ -53,3 +54,11 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+for (let index = 0; index < gameCards.length; index++) {
+    document.getElementById(index).addEventListener('click', function myFun(e) {
+        this.value = 1;
+    });
+}
+
+
