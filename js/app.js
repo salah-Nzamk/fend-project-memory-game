@@ -55,12 +55,6 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-for (let index = 0; index < gameCards.length; index++) {
-    $('#'+index).click(function addValue() {
-        $(this).val(1);
-    });
-}
-
 let cardsList = [];
 for (let index = 0; index < gameCards.length; index++) {
     cardsList[index]=$('#'+index).get(0);
@@ -69,43 +63,65 @@ for (let index = 0; index < gameCards.length; index++) {
 let cardClicksNumber = 0;
 let firstClickedCard = null;
 let secondClickedCard = null;
-$('.card').click(function engine(event) {
+$('.card').on('click',function engine(event) {
+    $(this).addClass('flip');
     thisId = $(this).attr("id");
-    $("#"+thisId).off("click",engine);
-    for (let index = 0; index < gameCards.length; index++) {
-        if(cardsList[index].value == 1){
-            cardClicksNumber ++;
+    
+    if( $("#"+thisId).val() != 1){
+        $("#"+thisId).val(1);
+        $(this).css({"font-size": "30px"});
+        for (let index = 0; index < gameCards.length; index++) {
+            if(cardsList[index].value == 1){
+                cardClicksNumber ++;
+            }
+            if((cardClicksNumber==1)&&(cardsList[index].value == 1)){
+                firstClickedCard = $(this).find('i:first').attr('class').split(' ')[1];
+                firstClickedCardID=thisId;
+            }
+            if((cardClicksNumber==2)&&(cardsList[index].value == 1)){
+                secondClickedCard = $(this).find('i:first').attr('class').split(' ')[1];
+                secondClickedCardID=thisId;
+                break;
+            }
+            
         }
-        if((cardClicksNumber==1)&&(cardsList[index].value == 1)){
-            firstClickedCard = $(this).find('i:first').attr('class').split(' ')[1];
-            cardsList[index].value = 0;
-        }
-        if((cardClicksNumber==2)&&(cardsList[index].value == 1)){
-            secondClickedCard = $(this).find('i:first').attr('class').split(' ')[1];
-            cardsList[index].value = 0; 
-            break;
+
+        if ((firstClickedCard===secondClickedCard)&&(firstClickedCard!=null)&&(secondClickedCard!=null)) {
+            $('.'+firstClickedCard).parent().removeAttr('value');
+            $('.'+firstClickedCard).parent().removeAttr('id');
+            $('.'+firstClickedCard).parent().off("click");
+            $('.'+firstClickedCard).parent().removeClass('flip cardWrong');
+            $('.'+firstClickedCard).parent().addClass('cardRight');
+            firstClickedCard = null;
+            secondClickedCard = null;
+            cardClicksNumber = 0;
         }
         
-    }
-    //console.log(cardClicksNumber);
-    //console.log(firstClickedCard);
-    //console.log(secondClickedCard);
-    if ((firstClickedCard===secondClickedCard)&&(firstClickedCard!=null)) {
-        alert("correct");
-        //console.log('.'+firstClickedCard);
-        $('.'+firstClickedCard).parent().removeAttr('value');
-        $('.'+firstClickedCard).parent().removeAttr('id');
-        //$('.'+firstClickedCard).parent().off("click",engine);
-        //console.log($('.'+firstClickedCard).parent().get(0));
-        //console.log($('.'+secondClickedCard).parent().get(0));
-        firstClickedCard = null;
-        secondClickedCard = null;
-        cardClicksNumber = 0;
-    }
-    if ((firstClickedCard!=secondClickedCard)&&(cardClicksNumber==2)) {
-        cardClicksNumber=0;
-        firstClickedCard = null;
-        secondClickedCard = null;
-        console.log("cardclicknumbers= ",cardClicksNumber);
+        if ((firstClickedCard!=secondClickedCard)&&(cardClicksNumber==2)) {
+            cardClicksNumber=0;
+            $('#'+firstClickedCardID).attr("value",0);
+            $('#'+secondClickedCardID).attr("value",0);
+            $('#'+firstClickedCardID).on('click');
+            $('#'+secondClickedCardID).on('click');
+            $('#'+firstClickedCardID).removeClass('card');
+            $('#'+secondClickedCardID).removeClass('card');
+            $('#'+firstClickedCardID).addClass('cardWrong');
+            $('#'+secondClickedCardID).addClass('cardWrong');
+            //console.log($('.'+firstClickedCard).parent().attr("id"));
+            //console.log($('.'+secondClickedCard).parent().attr("id"));
+            setTimeout(hide, 1000);
+            function hide(){
+                $('#'+firstClickedCardID).removeClass('flip cardWrong');
+                $('#'+secondClickedCardID).removeClass('flip cardWrong');
+                $('#'+firstClickedCardID).addClass('card');
+                $('#'+secondClickedCardID).addClass('card');
+                $('#'+firstClickedCardID).css({"font-size": "0"});
+                $('#'+secondClickedCardID).css({"font-size": "0"});
+                firstClickedCard = null;
+                secondClickedCard = null;
+            }
+        }
+
     }
 });
+
