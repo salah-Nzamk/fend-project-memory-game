@@ -62,12 +62,10 @@ for (let index = 0; index < gameCards.length; index++) {
 }
 
 let cardClicksNumber = 0;
-let firstClickedCard ;
-let secondClickedCard ;
+let firstClickedCard = null;
+let secondClickedCard = null;
 $('.card').on('click',function engine(event) {
-    firstClickedCard = null;
-    secondClickedCard = null;
-    $(this).addClass('flip');
+    $(this).addClass('flipInY');
     thisId = $(this).attr("id");
     
     if( $("#"+thisId).val() != 1){
@@ -92,12 +90,14 @@ $('.card').on('click',function engine(event) {
         if ((firstClickedCard===secondClickedCard)&&(firstClickedCard!=null)&&(secondClickedCard!=null)) {
             $('#'+firstClickedCardID).off("click");
             $('#'+secondClickedCardID).off("click");
-            $('#'+firstClickedCardID).removeClass('flip cardWrong');
-            $('#'+secondClickedCardID).removeClass('flip cardWrong');
+            $('#'+firstClickedCardID).removeClass('flipInY cardWrong shake');
+            $('#'+secondClickedCardID).removeClass('flipInY cardWrong shake');
             $('#'+firstClickedCardID).addClass('cardRight rubberBand');
             $('#'+secondClickedCardID).addClass('cardRight rubberBand');
             $('#'+firstClickedCardID).removeAttr('value id');
             $('#'+secondClickedCardID).removeAttr('value id');
+            firstClickedCard = null;
+            secondClickedCard = null;
             cardClicksNumber = 0;
         }
         
@@ -118,12 +118,14 @@ $('.card').on('click',function engine(event) {
             //console.log($('.'+secondClickedCard).parent().attr("id"));
             setTimeout(hide, 500);
             function hide(){
-                $('#'+firstClickedCardID).removeClass('flip cardWrong  ');
-                $('#'+secondClickedCardID).removeClass('flip cardWrong  ');
+                $('#'+firstClickedCardID).removeClass('flipInY cardWrong ');
+                $('#'+secondClickedCardID).removeClass('flipInY cardWrong  ');
                 $('#'+firstClickedCardID).addClass('card');
                 $('#'+secondClickedCardID).addClass('card');
                 $('#'+firstClickedCardID).css({"font-size": "0"});
                 $('#'+secondClickedCardID).css({"font-size": "0"});
+                firstClickedCard = null;
+                secondClickedCard = null;
             }
         }
 
