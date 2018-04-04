@@ -11,6 +11,7 @@ for (let index = 0; index <= 15; index++) {
     let myLi = document.createElement('li');
     let myIcon = document.createElement('i');
     myLi.classList.add("card");
+    myLi.classList.add("animated");
     myLi.setAttribute("id",index);
     myLi.setAttribute("value",0);
     myIcon.classList.add("fa");
@@ -61,9 +62,11 @@ for (let index = 0; index < gameCards.length; index++) {
 }
 
 let cardClicksNumber = 0;
-let firstClickedCard = null;
-let secondClickedCard = null;
+let firstClickedCard ;
+let secondClickedCard ;
 $('.card').on('click',function engine(event) {
+    firstClickedCard = null;
+    secondClickedCard = null;
     $(this).addClass('flip');
     thisId = $(this).attr("id");
     
@@ -87,17 +90,21 @@ $('.card').on('click',function engine(event) {
         }
 
         if ((firstClickedCard===secondClickedCard)&&(firstClickedCard!=null)&&(secondClickedCard!=null)) {
-            $('.'+firstClickedCard).parent().removeAttr('value');
-            $('.'+firstClickedCard).parent().removeAttr('id');
-            $('.'+firstClickedCard).parent().off("click");
-            $('.'+firstClickedCard).parent().removeClass('flip cardWrong');
-            $('.'+firstClickedCard).parent().addClass('cardRight');
-            firstClickedCard = null;
-            secondClickedCard = null;
+            $('#'+firstClickedCardID).off("click");
+            $('#'+secondClickedCardID).off("click");
+            $('#'+firstClickedCardID).removeClass('flip cardWrong');
+            $('#'+secondClickedCardID).removeClass('flip cardWrong');
+            $('#'+firstClickedCardID).addClass('cardRight rubberBand');
+            $('#'+secondClickedCardID).addClass('cardRight rubberBand');
+            $('#'+firstClickedCardID).removeAttr('value id');
+            $('#'+secondClickedCardID).removeAttr('value id');
             cardClicksNumber = 0;
         }
         
         if ((firstClickedCard!=secondClickedCard)&&(cardClicksNumber==2)) {
+                for (let index = 0; index < gameCards.length; index++) {
+                    $("#"+index).attr("value",0);
+                }
             cardClicksNumber=0;
             $('#'+firstClickedCardID).attr("value",0);
             $('#'+secondClickedCardID).attr("value",0);
@@ -105,20 +112,18 @@ $('.card').on('click',function engine(event) {
             $('#'+secondClickedCardID).on('click');
             $('#'+firstClickedCardID).removeClass('card');
             $('#'+secondClickedCardID).removeClass('card');
-            $('#'+firstClickedCardID).addClass('cardWrong');
-            $('#'+secondClickedCardID).addClass('cardWrong');
+            $('#'+firstClickedCardID).addClass('cardWrong  shake');
+            $('#'+secondClickedCardID).addClass('cardWrong  shake');
             //console.log($('.'+firstClickedCard).parent().attr("id"));
             //console.log($('.'+secondClickedCard).parent().attr("id"));
-            setTimeout(hide, 1000);
+            setTimeout(hide, 500);
             function hide(){
-                $('#'+firstClickedCardID).removeClass('flip cardWrong');
-                $('#'+secondClickedCardID).removeClass('flip cardWrong');
+                $('#'+firstClickedCardID).removeClass('flip cardWrong  ');
+                $('#'+secondClickedCardID).removeClass('flip cardWrong  ');
                 $('#'+firstClickedCardID).addClass('card');
                 $('#'+secondClickedCardID).addClass('card');
                 $('#'+firstClickedCardID).css({"font-size": "0"});
                 $('#'+secondClickedCardID).css({"font-size": "0"});
-                firstClickedCard = null;
-                secondClickedCard = null;
             }
         }
 
