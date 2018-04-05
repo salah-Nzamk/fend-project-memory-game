@@ -202,14 +202,14 @@ $(document).on('click', '.pause', function() {
 
 // play audio
 var audio = new Audio('../assets/ToonMemoryGame.mp3');
+var duration = audio.currentTime;
 audio.addEventListener('ended', function() {
-    if (audio.src == '../assets/ToonMemoryGame.mp3') {
+    if (duration.s == 24) {
         this.currentTime = 0;
         this.play();   
     }
 }, false);
 audio.play();
-
 var duration = {s: 60 },
     sf = 120, 
     maxS = 60;
