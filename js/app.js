@@ -31,7 +31,7 @@ document.getElementsByClassName('deck')[0].appendChild(fragment);
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    let currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -64,8 +64,12 @@ for (let index = 0; index < gameCards.length; index++) {
 let cardClicksNumber = 0;
 let firstClickedCard = null;
 let secondClickedCard = null;
+let moves = 0;
+let successfullyMatched = 0;
+let stars = 3;
 $('.card').on('click',function engine(event) {
     $(this).addClass('flipInY');
+    $(this).addClass('cardFlipped');
     thisId = $(this).attr("id");
     
     if( $("#"+thisId).val() != 1){
@@ -88,10 +92,13 @@ $('.card').on('click',function engine(event) {
         }
 
         if ((firstClickedCard===secondClickedCard)&&(firstClickedCard!=null)&&(secondClickedCard!=null)) {
+            moves++;
+            successfullyMatched++;
+            $('.moves').get(0).textContent=moves;
             $('#'+firstClickedCardID).off("click");
             $('#'+secondClickedCardID).off("click");
-            $('#'+firstClickedCardID).removeClass('flipInY cardWrong shake');
-            $('#'+secondClickedCardID).removeClass('flipInY cardWrong shake');
+            $('#'+firstClickedCardID).removeClass('flipInY cardWrong shake cardFlipped');
+            $('#'+secondClickedCardID).removeClass('flipInY cardWrong shake cardFlipped');
             $('#'+firstClickedCardID).addClass('cardRight rubberBand');
             $('#'+secondClickedCardID).addClass('cardRight rubberBand');
             $('#'+firstClickedCardID).removeAttr('value id');
@@ -102,6 +109,8 @@ $('.card').on('click',function engine(event) {
         }
         
         if ((firstClickedCard!=secondClickedCard)&&(cardClicksNumber==2)) {
+            moves++;
+            $('.moves').get(0).textContent=moves;
                 for (let index = 0; index < gameCards.length; index++) {
                     $("#"+index).attr("value",0);
                 }
@@ -110,8 +119,8 @@ $('.card').on('click',function engine(event) {
             $('#'+secondClickedCardID).attr("value",0);
             $('#'+firstClickedCardID).on('click');
             $('#'+secondClickedCardID).on('click');
-            $('#'+firstClickedCardID).removeClass('card');
-            $('#'+secondClickedCardID).removeClass('card');
+            $('#'+firstClickedCardID).removeClass('card cardFlipped');
+            $('#'+secondClickedCardID).removeClass('card cardFlipped');
             $('#'+firstClickedCardID).addClass('cardWrong  shake');
             $('#'+secondClickedCardID).addClass('cardWrong  shake');
             //console.log($('.'+firstClickedCard).parent().attr("id"));
@@ -128,7 +137,109 @@ $('.card').on('click',function engine(event) {
                 secondClickedCard = null;
             }
         }
-
+    }
+    // starts handling 
+    if (moves>8) {
+        $("#firstStar").removeClass('fa-star');
+        $("#firstStar").addClass('fa-star-o');
+        if (stars==3) {
+            stars--;
+        }
+    }
+    if (moves>12) {
+        $("#secondStar").removeClass('fa-star');
+        $("#secondStar").addClass('fa-star-o');
+        audio.playbackRate = 1.5;
+        if (stars==2) {
+            stars--;
+        }
+    }
+    if (moves>16) {
+        $("#thirdStar").removeClass('fa-star');
+        $("#thirdStar").addClass('fa-star-o');
+        audio.playbackRate = 2;
+        if (stars==1) {
+            stars--;
+        }
+    }
+    if (successfullyMatched == 8) {
+        audio.src = '../assets/levelcompleted.mp3';
+        audio.play();
+        $(".deck").get(0).insertAdjacentHTML('afterbegin','<div class="circle-loader"><div class="checkmark draw"></div></div>');
+        $(".deck").get(0).insertAdjacentHTML('beforeend','<p class="game-message">Congratulations! You Won!</p>');
+        $(".deck").get(0).insertAdjacentHTML('beforeend' ,'<p class="game-message_2">with '+moves+' Moves and '+stars+' Stars</p>');
+        $(".deck").get(0).insertAdjacentHTML('beforeend' ,'<p class="game-message_2">Wooooooooooo!</p>');
+        $(".deck").get(0).insertAdjacentHTML('beforeend','<button class="game-message-button">Play Again!</button>'); 
+        $(".deck").get(0).style.display = "inline";
+        $('li').remove();
+        $('.timer-2').remove();
+        $('.circle-loader').toggleClass('load-complete');
+        $('.checkmark').toggle();
+        $('.game-message-button').on('click', function(){
+            location.reload();
+        });
     }
 });
 
+// repeat action 
+$('.fa-repeat').on('click', function(){
+    location.reload();
+});
+
+// audio control 
+$(document).on('click', '.play', function() {
+    audio.play();
+    $(this).removeClass('play').addClass('pause');
+    $('a .fa-volume-up').removeClass('fa-volume-up').addClass('fa-volume-off');
+});
+  
+
+$(document).on('click', '.pause', function() {
+    audio.pause();
+    $(this).removeClass('pause').addClass('play');
+    $('a .fa-volume-off').removeClass('fa-volume-off').addClass('fa-volume-up');
+});
+
+// play audio
+var audio = new Audio('../assets/ToonMemoryGame.mp3');
+audio.addEventListener('ended', function() {
+    if (audio.src == '../assets/ToonMemoryGame.mp3') {
+        this.currentTime = 0;
+        this.play();   
+    }
+}, false);
+audio.play();
+
+var duration = {s: 60 },
+    sf = 120, 
+    maxS = 60;
+
+setInterval(function() {
+  
+  $('.s').html(duration.s)
+    .attr('data-t', duration.s - 1);
+  duration.s--;
+  $('.s').addClass('flip');
+  $('.is .circle').css('stroke-dashoffset', sf-(duration.s*(sf/maxS)));
+  
+  if (duration.s < 25) {
+    audio.playbackRate = 1.5;
+  }
+  
+  if (duration.s < 15) {
+    audio.playbackRate = 2;
+  }
+  if ((duration.s === 0)&&(successfullyMatched<8)) {
+    // Game Over
+    audio.src = '../assets/levelfailed.mp3';
+    audio.play();
+    $(".deck").get(0).insertAdjacentHTML('afterbegin','<p class="game-message game-over">Game over!</p>');
+    $(".deck").get(0).insertAdjacentHTML('beforeend','<button class="game-message-button">Play Again!</button>'); 
+    $(".deck").get(0).style.display = "inline";
+    $('li').remove();
+    $('.timer-2').remove();
+    $('.game-message-button').on('click', function(){
+        location.reload();
+    });
+  }
+}, 1000);
