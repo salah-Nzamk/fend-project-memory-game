@@ -67,14 +67,16 @@ let secondClickedCard = null;
 let moves = 0;
 let successfullyMatched = 0;
 let stars = 3;
+let onlyTwoCard = 0;
 $('.card').on('click',function engine(event) {
+if(onlyTwoCard==0){    
     $(this).addClass('flipInY');
     $(this).addClass('cardFlipped');
     thisId = $(this).attr("id");
     
     if( $("#"+thisId).val() != 1){
         $("#"+thisId).val(1);
-        $(this).css({"font-size": "30px"});
+        $(this).addClass('show');
         for (let index = 0; index < gameCards.length; index++) {
             if(cardsList[index].value == 1){
                 cardClicksNumber ++;
@@ -92,6 +94,7 @@ $('.card').on('click',function engine(event) {
         }
 
         if ((firstClickedCard===secondClickedCard)&&(firstClickedCard!=null)&&(secondClickedCard!=null)) {
+            onlyTwoCard++;
             moves++;
             successfullyMatched++;
             $('.moves').get(0).textContent=moves;
@@ -103,12 +106,17 @@ $('.card').on('click',function engine(event) {
             $('#'+secondClickedCardID).addClass('cardRight rubberBand');
             $('#'+firstClickedCardID).removeAttr('value id');
             $('#'+secondClickedCardID).removeAttr('value id');
+            setTimeout(waitForFlip, 500);
             firstClickedCard = null;
             secondClickedCard = null;
             cardClicksNumber = 0;
+            function waitForFlip() {
+                onlyTwoCard = 0;
+            }
         }
         
         if ((firstClickedCard!=secondClickedCard)&&(cardClicksNumber==2)) {
+            onlyTwoCard++;
             moves++;
             $('.moves').get(0).textContent=moves;
                 for (let index = 0; index < gameCards.length; index++) {
@@ -127,12 +135,11 @@ $('.card').on('click',function engine(event) {
             //console.log($('.'+secondClickedCard).parent().attr("id"));
             setTimeout(hide, 500);
             function hide(){
-                $('#'+firstClickedCardID).removeClass('flipInY cardWrong ');
-                $('#'+secondClickedCardID).removeClass('flipInY cardWrong  ');
+                $('#'+firstClickedCardID).removeClass('flipInY cardWrong show');
+                $('#'+secondClickedCardID).removeClass('flipInY cardWrong show');
                 $('#'+firstClickedCardID).addClass('card');
                 $('#'+secondClickedCardID).addClass('card');
-                $('#'+firstClickedCardID).css({"font-size": "0"});
-                $('#'+secondClickedCardID).css({"font-size": "0"});
+                onlyTwoCard=0;
                 firstClickedCard = null;
                 secondClickedCard = null;
             }
@@ -179,6 +186,7 @@ $('.card').on('click',function engine(event) {
             location.reload();
         });
     }
+}
 });
 
 // repeat action 

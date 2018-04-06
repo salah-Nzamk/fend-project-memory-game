@@ -111,7 +111,7 @@ h1 {
     cursor: default;
 }
 
-.deck .card.show {
+.deck .show {
     font-size: 33px;
 }
 
