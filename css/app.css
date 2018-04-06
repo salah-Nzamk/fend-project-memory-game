@@ -176,7 +176,6 @@ a {
     font-size: 30px;
     font-weight: bold;
     text-align: center;
-    margin-top: 40%;
 }
 .game-message_2 {
     font-size: 15px;
@@ -276,3 +275,13 @@ a {
     }
   }
   
+.game-over-modal {
+    display: table;
+    width: 100%;
+    margin-top: 20%;
+}
+.game-won-modal {
+    display: table;
+    width: 100%;
+    margin-top: 8%;
+}

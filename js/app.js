@@ -146,14 +146,14 @@ if(onlyTwoCard==0){
         }
     }
     // starts handling 
-    if (moves>8) {
+    if (moves>10) {
         $("#firstStar").removeClass('fa-star');
         $("#firstStar").addClass('fa-star-o');
         if (stars==3) {
             stars--;
         }
     }
-    if (moves>12) {
+    if (moves>16) {
         $("#secondStar").removeClass('fa-star');
         $("#secondStar").addClass('fa-star-o');
         audio.playbackRate = 1.5;
@@ -161,24 +161,35 @@ if(onlyTwoCard==0){
             stars--;
         }
     }
-    if (moves>16) {
+    if (moves>20) {
         $("#thirdStar").removeClass('fa-star');
         $("#thirdStar").addClass('fa-star-o');
         audio.playbackRate = 2;
         if (stars==1) {
-            stars--;
+                stars--;
+                // Game Over
+                audio.src = '../assets/levelfailed.mp3';
+                audio.play();
+                $('#myModal').modal('show');
+                $(".modal-body").get(0).insertAdjacentHTML('afterbegin','<p class="game-message game-over">Game over!</p>');
+                $(".modal-body").get(0).insertAdjacentHTML('beforeend','<button class="game-message-button">Play Again!</button>'); 
+                $(".game-modal").addClass('game-over-modal');
+                $('.timer-2').remove();
+                $('.game-message-button').on('click', function(){
+                    location.reload();
+                });
         }
     }
     if (successfullyMatched == 8) {
         audio.src = '../assets/levelcompleted.mp3';
         audio.play();
-        $(".deck").get(0).insertAdjacentHTML('afterbegin','<div class="circle-loader"><div class="checkmark draw"></div></div>');
-        $(".deck").get(0).insertAdjacentHTML('beforeend','<p class="game-message">Congratulations! You Won!</p>');
-        $(".deck").get(0).insertAdjacentHTML('beforeend' ,'<p class="game-message_2">with '+moves+' Moves and '+stars+' Stars</p>');
-        $(".deck").get(0).insertAdjacentHTML('beforeend' ,'<p class="game-message_2">Wooooooooooo!</p>');
-        $(".deck").get(0).insertAdjacentHTML('beforeend','<button class="game-message-button">Play Again!</button>'); 
-        $(".deck").get(0).style.display = "inline";
-        $('li').remove();
+        $('#myModal').modal('show');
+        $(".modal-body").get(0).insertAdjacentHTML('afterbegin','<div class="circle-loader"><div class="checkmark draw"></div></div>');
+        $(".modal-body").get(0).insertAdjacentHTML('beforeend','<p class="game-message">Congratulations!<br> You Won The Game in '+duration.s+' s</p>');
+        $(".modal-body").get(0).insertAdjacentHTML('beforeend' ,'<p class="game-message_2">with '+moves+' Moves and '+stars+' Stars</p>');
+        $(".modal-body").get(0).insertAdjacentHTML('beforeend' ,'<p class="game-message_2">Wooooooooooo!</p>');
+        $(".modal-body").get(0).insertAdjacentHTML('beforeend','<button class="game-message-button">Play Again!</button>'); 
+        $(".game-modal").addClass('game-won-modal');
         $('.timer-2').remove();
         $('.circle-loader').toggleClass('load-complete');
         $('.checkmark').toggle();
@@ -210,9 +221,9 @@ $(document).on('click', '.pause', function() {
 
 // play audio
 var audio = new Audio('../assets/ToonMemoryGame.mp3');
-var duration = audio.currentTime;
 audio.addEventListener('ended', function() {
-    if (duration.s == 24) {
+    console.log(duration.s);
+    if ((duration.s >0)&&(stars>0)) {
         this.currentTime = 0;
         this.play();   
     }
@@ -237,17 +248,22 @@ setInterval(function() {
   if (duration.s < 15) {
     audio.playbackRate = 2;
   }
-  if ((duration.s === 0)&&(successfullyMatched<8)) {
+  if ((duration.s === 0)&&(successfullyMatched<8)&&(stars>0)) {
     // Game Over
     audio.src = '../assets/levelfailed.mp3';
     audio.play();
-    $(".deck").get(0).insertAdjacentHTML('afterbegin','<p class="game-message game-over">Game over!</p>');
-    $(".deck").get(0).insertAdjacentHTML('beforeend','<button class="game-message-button">Play Again!</button>'); 
-    $(".deck").get(0).style.display = "inline";
-    $('li').remove();
+    $('#myModal').modal('show');
+    $(".modal-body").get(0).insertAdjacentHTML('afterbegin','<p class="game-message game-over">Game over!</p>');
+    $(".modal-body").get(0).insertAdjacentHTML('beforeend','<button class="game-message-button">Play Again!</button>'); 
+    $(".game-modal").addClass('game-over-modal');
     $('.timer-2').remove();
     $('.game-message-button').on('click', function(){
         location.reload();
     });
   }
 }, 1000);
+
+$('#myModal').on('hidden.bs.modal', function () {
+    location.reload();
+});
+  
