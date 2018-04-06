@@ -7,14 +7,11 @@
 
 ## Instructions
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+This game is made by me "salah yousef" a student enrolled in Udacity Front End nanodegree programm as a 
+js project.
 
-To get started, open `js/app.js` and start building out the app's functionality
+To get started, open `index.html` and start playing
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
 
 ## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+thank you very much this game is my project for learning js if you have commets it will be appretiated.
