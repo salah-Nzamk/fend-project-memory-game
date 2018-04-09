@@ -168,7 +168,7 @@ if(onlyTwoCard==0){
         if (stars==1) {
                 stars--;
                 // Game Over
-                audio.src = '../assets/levelfailed.mp3';
+                audio.src = 'assets/levelfailed.mp3';
                 audio.play();
                 $('#myModal').modal('show');
                 $(".modal-body").get(0).insertAdjacentHTML('afterbegin','<p class="game-message game-over">Game over!</p>');
@@ -181,7 +181,7 @@ if(onlyTwoCard==0){
         }
     }
     if (successfullyMatched == 8) {
-        audio.src = '../assets/levelcompleted.mp3';
+        audio.src = 'assets/levelcompleted.mp3';
         audio.play();
         $('#myModal').modal('show');
         $(".modal-body").get(0).insertAdjacentHTML('afterbegin','<div class="circle-loader"><div class="checkmark draw"></div></div>');
@@ -220,7 +220,7 @@ $(document).on('click', '.pause', function() {
 });
 
 // play audio
-var audio = new Audio('../assets/ToonMemoryGame.mp3');
+var audio = new Audio('assets/ToonMemoryGame.mp3');
 audio.addEventListener('ended', function() {
     console.log(duration.s);
     if ((duration.s >0)&&(stars>0)) {
@@ -250,7 +250,7 @@ setInterval(function() {
   }
   if ((duration.s === 0)&&(successfullyMatched<8)&&(stars>0)) {
     // Game Over
-    audio.src = '../assets/levelfailed.mp3';
+    audio.src = 'assets/levelfailed.mp3';
     audio.play();
     $('#myModal').modal('show');
     $(".modal-body").get(0).insertAdjacentHTML('afterbegin','<p class="game-message game-over">Game over!</p>');
